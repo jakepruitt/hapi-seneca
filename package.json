@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/jrpruit1/hapi-seneca/issues"
   },
-  "homepage": "https://github.com/jrpruit1/hapi-seneca"
+  "homepage": "https://github.com/jrpruit1/hapi-seneca",
+  "dependencies": {
+    "hapi-to-express": "^1.0.0"
+  }
 }
