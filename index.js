@@ -20,14 +20,14 @@
  *      A Hapi plugin that can be registered
  *      to a hapi instance with:
  *      server.register({
- *        register: require('./hapi-seneca');
+ *        register: require('hapi-seneca');
  *        options: {
  *          seneca: seneca,
  *          cors: true
  *        }
  *      }, cb);
  *
- * Note: most of the logic for this app
+ * Note: most of the logic for this module
  *      lies in the 'hapi-to-express' module.
  *********************************************/
 
