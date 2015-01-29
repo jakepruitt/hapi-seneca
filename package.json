@@ -1,6 +1,6 @@
 {
   "name": "hapi-seneca",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hapi plugin for interacting with Seneca",
   "main": "index.js",
   "scripts": {
