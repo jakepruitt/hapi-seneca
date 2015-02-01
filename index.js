@@ -36,6 +36,13 @@ var hapiToExpress = require('hapi-to-express');
 var hapiSeneca = {
   register: function (server, options, next) {
     var seneca = options.seneca;
+    
+    // Create appropriate Hapi cors option object:
+    if (options.cors) {
+      options.cors = {
+        credentials: true
+      };
+    }
 
     // Create Hapi Default route handler
     var handler = function (request, reply) {
