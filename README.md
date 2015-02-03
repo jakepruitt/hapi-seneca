@@ -1,7 +1,9 @@
-seneca-hapi
+hapi-seneca
 ===========
 
-A seneca plugin for working with the Hapi.js framework.
+A Hapi plugin for working with the seneca framework.
+
+
 
 Usage
 -----
