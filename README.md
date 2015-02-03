@@ -3,7 +3,8 @@ hapi-seneca
 
 A Hapi plugin for working with the seneca framework.
 
-
+[![NPM](https://nodei.co/npm/hapi-seneca.png)](https://nodei.co/npm/hapi-seneca/)
+[![NPM](https://nodei.co/npm-dl/hapi-seneca.png)](https://nodei.co/npm-dl/hapi-seneca/)
 
 Usage
 -----
