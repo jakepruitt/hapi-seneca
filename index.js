@@ -32,6 +32,8 @@
  *********************************************/
 
 var hapiToExpress = require('hapi-to-express');
+var bodyparser = require('body-parser');
+var cookieparser = require('cookie-parser');
 
 var hapiSeneca = {
   register: function (server, options, next) {
@@ -59,13 +61,31 @@ var hapiSeneca = {
     
     server.ext('onPostAuth', function(request, reply) {
       var hapress = hapiToExpress(request, reply);
+      
+      // TODO allow setting enabling these externally and refactor
+      var cookie = cookieparser();
+      var urlencoded = bodyparser.urlencoded({ extended: true });
+      var json = bodyparser.json(); // TODO // { limit: so.bodyparser.json.limit })) 
 
-      seneca.export('web')(hapress.req, hapress.res, function(err) {
+      cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
-        reply.continue();
+
+        urlencoded(hapress.req, hapress.res, function(err) {
+          if (err) { return reply(err); }
+	
+	  json(hapress.req, hapress.res, function(err) {
+	    if (err) { return reply(err); }
+	    
+	    var app = seneca.export('web');
+            app(hapress.req, hapress.res, function(err) {
+              if (err) { return reply(err); }    
+	
+              reply.continue();
+	    });
+          });
+        });
       });
     });
-
 
     next();
   }
