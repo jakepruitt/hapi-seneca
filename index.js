@@ -32,7 +32,6 @@
  *********************************************/
 
 var hapiToExpress = require('hapi-to-express');
-var bodyparser = require('body-parser');
 var cookieparser = require('cookie-parser');
 
 var hapiSeneca = {
@@ -64,8 +63,6 @@ var hapiSeneca = {
       
       // TODO allow setting enabling these externally and refactor
       var cookie = cookieparser();
-      var urlencoded = bodyparser.urlencoded({ extended: true });
-      var json = bodyparser.json(); // TODO // { limit: so.bodyparser.json.limit })) 
 
       cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
