@@ -70,19 +70,11 @@ var hapiSeneca = {
       cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
 
-        urlencoded(hapress.req, hapress.res, function(err) {
-          if (err) { return reply(err); }
+	var app = seneca.export('web');
+        app(hapress.req, hapress.res, function(err) {
+          if (err) { return reply(err); }    
 	
-	  json(hapress.req, hapress.res, function(err) {
-	    if (err) { return reply(err); }
-	    
-	    var app = seneca.export('web');
-            app(hapress.req, hapress.res, function(err) {
-              if (err) { return reply(err); }    
-	
-              reply.continue();
-	    });
-          });
+          reply.continue();
         });
       });
     });
