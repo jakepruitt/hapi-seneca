@@ -1,6 +1,6 @@
 {
   "name": "hapi-seneca",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Hapi plugin for interacting with Seneca",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,9 @@
     "hapi",
     "seneca"
   ],
-  "author": "jrpruit1",
+  "author": {
+    "name": "jrpruit1"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jrpruit1/hapi-seneca/issues"
@@ -22,6 +24,15 @@
   "homepage": "https://github.com/jrpruit1/hapi-seneca",
   "dependencies": {
     "cookie-parser": "^1.3.5",
-    "hapi-to-express": "^1.0.0"
-  }
+    "hapi-to-express": "git://github.com/wprl/hapi-to-express.git#5570e60c5c6fd98438bb01cf95c904a80005a79b",
+    "express-session": "~1.11.3"
+  },
+  "readme": "hapi-seneca\n===========\n\nA Hapi plugin for working with the seneca framework.\n\n[![NPM](https://nodei.co/npm/hapi-seneca.png)](https://nodei.co/npm/hapi-seneca/)\n[![NPM](https://nodei.co/npm-dl/hapi-seneca.png)](https://nodei.co/npm-dl/hapi-seneca/)\n\nUsage\n-----\n\nThis module returns a Hapi plugin that allows [seneca-web](https://github.com/rjrodger/seneca-web) functionality to work as expected in the Hapi framework.\n\n**params** - When used as a plugin in the Hapi framework, the `options` object should have the `seneca` option referencing the seneca instance that any seneca-web actions have been called on.\n\nThe `cors` option should be set to true if the API is to be accessed by other web hosts.\n\n**returns** - a Hapi plugin that can be registered to a Hapi instance.\n\nExample\n-------\n\n```JavaScript\nvar Hapi = require('hapi');\nvar seneca = require('seneca')();\n\nvar server = new Hapi.Server({ port: 4000 });\n\nseneca.add({role: 'test', cmd: 'test'}, function(args, done) {\n  console.log('Recieved a request');\n  done(null, {worked: true});\n});\n\nseneca.act('role:web', {use: {\n  prefix: '/api/1.0',\n  pin: {role:'test', cmd: '*'},\n  map: {\n    test: true\n  }\n}});\n\nserver.register({\n  register: require('hapi-seneca'),\n  options: {\n    seneca: seneca,\n    cors: true\n  }\n}, function(err) {\n  if (err) console.error(err);\n  server.start(function() {\n    console.log('Server is running');\n  });\n});\n```\n\nNote\n----\n\nMost of the logic for this module lies in the [hapi-to-express](https://github.com/jrpruit1/hapi-to-express) module.\n",
+  "readmeFilename": "README.md",
+  "_id": "hapi-seneca@1.0.3",
+  "dist": {
+    "shasum": "4d49ca44a96e1488ddc9f9af908f96f26bac6f56"
+  },
+  "_resolved": "git://github.com/wprl/hapi-seneca.git#3f7e4b7d284c1fff679e27d72133c95d0d3c79d3",
+  "_from": "hapi-seneca@git://github.com/wprl/hapi-seneca.git#3f7e4b7d284c1fff679e27d72133c95d0d3c79d3"
 }

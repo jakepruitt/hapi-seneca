@@ -33,6 +33,7 @@
 
 var hapiToExpress = require('hapi-to-express');
 var cookieparser = require('cookie-parser');
+var session = require('express-session');
 
 var hapiSeneca = {
   register: function (server, options, next) {
@@ -51,7 +52,7 @@ var hapiSeneca = {
     };
 
     // Allow CORS based on cors option for plugin
-    server.route({ 
+    server.route({
       method: '*', 
       path: '/{p*}', 
       handler: handler, 
@@ -61,17 +62,22 @@ var hapiSeneca = {
     server.ext('onPostAuth', function(request, reply) {
       var hapress = hapiToExpress(request, reply);
       
-      // TODO allow setting enabling these externally and refactor
+      // TODO allow setting/enabling these externally and refactor
       var cookie = cookieparser();
+      var sess = session({ /*store: sessionStore, */secret: 'seneca', name: 'CD.ZENPLATFORM', saveUninitialized: true, resave: true });
 
       cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
 
-	var app = seneca.export('web');
-        app(hapress.req, hapress.res, function(err) {
-          if (err) { return reply(err); }    
-	
-          reply.continue();
+        sess(hapress.req, hapress.res, function(err) {
+          if (err) { return reply(err); }
+
+          var app = seneca.export('web');
+
+          app(hapress.req, hapress.res, function(err) {
+            if (err) { return reply(err); }    
+            reply.continue();
+          });
         });
       });
     });
