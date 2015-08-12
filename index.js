@@ -37,7 +37,7 @@ var session = require('express-session');
 
 var hapiSeneca = {
   register: function (server, options, next) {
-    var seneca = options.seneca;
+    var seneca = options.seneca || server.seneca;
     
     // Create appropriate Hapi cors option object:
     if (options.cors) {
