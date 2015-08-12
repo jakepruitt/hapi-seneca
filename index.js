@@ -87,4 +87,4 @@ var hapiSeneca = module.exports = {
   }
 };
 
-hapiSeneca.register.attributes = { pkg: pkg };
+hapiSeneca.register.attributes = { pkg: require('./package') };
