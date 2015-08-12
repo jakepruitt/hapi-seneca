@@ -35,10 +35,12 @@ var hapiToExpress = require('hapi-to-express');
 var cookieparser = require('cookie-parser');
 var session = require('express-session');
 
-var hapiSeneca = {
+var hapiSeneca = module.exports = {
   register: function (server, options, next) {
     var seneca = options.seneca || server.seneca;
     
+    if (!seneca) return next(new Error('Could not find seneca.'));
+
     // Create appropriate Hapi cors option object:
     if (options.cors) {
       options.cors = {
@@ -62,9 +64,8 @@ var hapiSeneca = {
     server.ext('onPostAuth', function(request, reply) {
       var hapress = hapiToExpress(request, reply);
       
-      // TODO allow setting/enabling these externally and refactor
       var cookie = cookieparser();
-      var sess = session({ /*store: sessionStore, */secret: 'seneca', name: 'CD.ZENPLATFORM', saveUninitialized: true, resave: true });
+      var sess = session(options.session);
 
       cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
@@ -86,9 +87,4 @@ var hapiSeneca = {
   }
 };
 
-hapiSeneca.register.attributes = {
-  name: 'hapi-seneca',
-  version: '1.0.0'
-};
-
-module.exports = hapiSeneca;
+hapiSeneca.register.attributes = { pkg: pkg };
