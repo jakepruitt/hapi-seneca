@@ -2,7 +2,7 @@ var Hapi = require('hapi');
 var seneca = require('seneca')();
 var test = require('tape');
 var request = require('request');
-    
+
 var server = new Hapi.Server();
 
 test('setup', function(assert) {
@@ -17,7 +17,7 @@ test('setup', function(assert) {
     });
 
     seneca.act('role:web', {use: {
-      prefix: '/api/1.0',
+      prefix: '/api/1.0/test',
       pin: {role:'test', cmd: '*'},
       map: {
         test: true
@@ -28,7 +28,12 @@ test('setup', function(assert) {
       register: require('..'),
       options: {
         seneca: seneca,
-        cors: true
+        cors: true,
+        session: {
+          secret: 'garden',
+          saveUninitialized: true,
+          resave: true
+        }
       }
     }, function(err) {
       if (err) console.error(err);
