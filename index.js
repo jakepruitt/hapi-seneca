@@ -32,11 +32,15 @@
  *********************************************/
 
 var hapiToExpress = require('hapi-to-express');
+var cookieparser = require('cookie-parser');
+var session = require('express-session');
 
-var hapiSeneca = {
+var hapiSeneca = module.exports = {
   register: function (server, options, next) {
-    var seneca = options.seneca;
+    var seneca = options.seneca || server.seneca;
     
+    if (!seneca) return next(new Error('Could not find seneca.'));
+
     // Create appropriate Hapi cors option object:
     if (options.cors) {
       options.cors = {
@@ -50,7 +54,7 @@ var hapiSeneca = {
     };
 
     // Allow CORS based on cors option for plugin
-    server.route({ 
+    server.route({
       method: '*', 
       path: '/{p*}', 
       handler: handler, 
@@ -59,21 +63,28 @@ var hapiSeneca = {
     
     server.ext('onPostAuth', function(request, reply) {
       var hapress = hapiToExpress(request, reply);
+      
+      var cookie = cookieparser();
+      var sess = session(options.session);
 
-      seneca.export('web')(hapress.req, hapress.res, function(err) {
+      cookie(hapress.req, hapress.res, function(err) {
         if (err) { return reply(err); }
-        reply.continue();
+
+        sess(hapress.req, hapress.res, function(err) {
+          if (err) { return reply(err); }
+
+          var app = seneca.export('web');
+
+          app(hapress.req, hapress.res, function(err) {
+            if (err) { return reply(err); }    
+            reply.continue();
+          });
+        });
       });
     });
-
 
     next();
   }
 };
 
-hapiSeneca.register.attributes = {
-  name: 'hapi-seneca',
-  version: '1.0.0'
-};
-
-module.exports = hapiSeneca;
+hapiSeneca.register.attributes = { pkg: require('./package') };
